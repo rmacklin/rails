@@ -1,7 +1,6 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS205: Consider reworking code to avoid use of IIFEs
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Collection class for creating (and internally managing) channel subscriptions. The only method intended to be triggered by the user
@@ -44,15 +43,13 @@ ActionCable.Subscriptions = class Subscriptions {
   }
 
   reject(identifier) {
-    return (() => {
-      const result = [];
-      for (let subscription of this.findAll(identifier)) {
-        this.forget(subscription);
-        this.notify(subscription, "rejected");
-        result.push(subscription);
-      }
-      return result;
-    })();
+    const result = [];
+    for (let subscription of this.findAll(identifier)) {
+      this.forget(subscription);
+      this.notify(subscription, "rejected");
+      result.push(subscription);
+    }
+    return result;
   }
 
   forget(subscription) {
@@ -82,13 +79,11 @@ ActionCable.Subscriptions = class Subscriptions {
       subscriptions = [subscription];
     }
 
-    return (() => {
-      const result = [];
-      for (subscription of subscriptions) {
-        result.push((typeof subscription[callbackName] === 'function' ? subscription[callbackName](...args) : undefined));
-      }
-      return result;
-    })();
+    const result = [];
+    for (subscription of subscriptions) {
+      result.push((typeof subscription[callbackName] === 'function' ? subscription[callbackName](...args) : undefined));
+    }
+    return result;
   }
 
   sendCommand(subscription, command) {
