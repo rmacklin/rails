@@ -1,6 +1,5 @@
 /*
  * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
  * DS205: Consider reworking code to avoid use of IIFEs
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
@@ -47,7 +46,7 @@ ActionCable.Subscriptions = class Subscriptions {
   reject(identifier) {
     return (() => {
       const result = [];
-      for (let subscription of Array.from(this.findAll(identifier))) {
+      for (let subscription of this.findAll(identifier)) {
         this.forget(subscription);
         this.notify(subscription, "rejected");
         result.push(subscription);
@@ -57,22 +56,22 @@ ActionCable.Subscriptions = class Subscriptions {
   }
 
   forget(subscription) {
-    this.subscriptions = (Array.from(this.subscriptions).filter((s) => s !== subscription));
+    this.subscriptions = (this.subscriptions.filter((s) => s !== subscription));
     return subscription;
   }
 
   findAll(identifier) {
-    return Array.from(this.subscriptions).filter((s) => s.identifier === identifier);
+    return this.subscriptions.filter((s) => s.identifier === identifier);
   }
 
   reload() {
-    return Array.from(this.subscriptions).map((subscription) =>
+    return this.subscriptions.map((subscription) =>
       this.sendCommand(subscription, "subscribe"));
   }
 
   notifyAll(callbackName, ...args) {
-    return Array.from(this.subscriptions).map((subscription) =>
-      this.notify(subscription, callbackName, ...Array.from(args)));
+    return this.subscriptions.map((subscription) =>
+      this.notify(subscription, callbackName, ...args));
   }
 
   notify(subscription, callbackName, ...args) {
@@ -85,8 +84,8 @@ ActionCable.Subscriptions = class Subscriptions {
 
     return (() => {
       const result = [];
-      for (subscription of Array.from(subscriptions)) {
-        result.push((typeof subscription[callbackName] === 'function' ? subscription[callbackName](...Array.from(args || [])) : undefined));
+      for (subscription of subscriptions) {
+        result.push((typeof subscription[callbackName] === 'function' ? subscription[callbackName](...args) : undefined));
       }
       return result;
     })();
