@@ -11,27 +11,33 @@
 //
 // An example demonstrates the basic functionality:
 //
-//   App.appearance = App.cable.subscriptions.create "AppearanceChannel",
-//     connected: ->
-//       # Called once the subscription has been successfully completed
+//   App.appearance = App.cable.subscriptions.create("AppearanceChannel", {
+//     connected() {
+//       // Called once the subscription has been successfully completed
+//     },
 //
-//     disconnected: ({ willAttemptReconnect: boolean }) ->
-//       # Called when the client has disconnected with the server.
-//       # The object will have an `willAttemptReconnect` property which
-//       # says whether the client has the intention of attempting
-//       # to reconnect.
+//     disconnected({ willAttemptReconnect: boolean }) {
+//       // Called when the client has disconnected with the server.
+//       // The object will have an `willAttemptReconnect` property which
+//       // says whether the client has the intention of attempting
+//       // to reconnect.
+//     },
 //
-//     appear: ->
-//       @perform 'appear', appearing_on: @appearingOn()
+//     appear() {
+//       this.perform('appear', {appearing_on: this.appearingOn()});
+//     },
 //
-//     away: ->
-//       @perform 'away'
+//     away() {
+//       this.perform('away');
+//     },
 //
-//     appearingOn: ->
-//       $('main').data 'appearing-on'
+//     appearingOn() {
+//       $('main').data('appearing-on');
+//     }
+//   });
 //
 // The methods #appear and #away forward their intent to the remote AppearanceChannel instance on the server
-// by calling the `@perform` method with the first parameter being the action (which maps to AppearanceChannel#appear/away).
+// by calling the `perform` method with the first parameter being the action (which maps to AppearanceChannel#appear/away).
 // The second parameter is a hash that'll get JSON encoded and made available on the server in the data parameter.
 //
 // This is how the server component would look:
@@ -55,7 +61,7 @@
 //   end
 //
 // The "AppearanceChannel" name is automatically mapped between the client-side subscription creation and the server-side Ruby class name.
-// The AppearanceChannel#appear/away public methods are exposed automatically to client-side invocation through the @perform method.
+// The AppearanceChannel#appear/away public methods are exposed automatically to client-side invocation through the perform method.
 (function() {
   let extend = undefined;
   const Cls = (ActionCable.Subscription = class Subscription {
