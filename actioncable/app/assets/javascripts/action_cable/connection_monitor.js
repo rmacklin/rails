@@ -1,33 +1,19 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Responsible for ensuring the cable connection is in good health by validating the heartbeat pings sent from the server, and attempting
 // revival reconnections if things go astray. Internal class, not intended for direct user manipulation.
-(function() {
-  let now = undefined;
-  let secondsSince = undefined;
-  let clamp = undefined;
-  const Cls = (ActionCable.ConnectionMonitor = class ConnectionMonitor {
-    static initClass() {
-      this.pollInterval = {
-        min: 3,
-        max: 30
-      };
-  
-      this.staleThreshold = 6;
-  
-      now = () => new Date().getTime();
-  
-      secondsSince = time => (now() - time) / 1000;
-  
-      clamp = (number, min, max) => Math.max(min, Math.min(max, number));
-       // Server::Connections::BEAT_INTERVAL * 2 (missed two pings)
-    }
+ActionCable.ConnectionMonitor = (function() {
+  const now = () => new Date().getTime();
 
+  const secondsSince = time => (now() - time) / 1000;
+
+  const clamp = (number, min, max) => Math.max(min, Math.min(max, number));
+
+  class ConnectionMonitor {
     constructor(connection) {
       this.visibilityDidChange = this.visibilityDidChange.bind(this);
       this.connection = connection;
@@ -130,7 +116,16 @@
         , 200);
       }
     }
-  });
-  Cls.initClass();
-  return Cls;
+
+  };
+
+  ConnectionMonitor.pollInterval = {
+    min: 3,
+    max: 30
+  };
+
+  ConnectionMonitor.staleThreshold = 6; // Server::Connections::BEAT_INTERVAL * 2 (missed two pings)
+
+  return ConnectionMonitor;
+
 })();
