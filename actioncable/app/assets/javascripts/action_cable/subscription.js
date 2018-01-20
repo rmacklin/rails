@@ -1,7 +1,6 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
@@ -62,21 +61,18 @@
 //
 // The "AppearanceChannel" name is automatically mapped between the client-side subscription creation and the server-side Ruby class name.
 // The AppearanceChannel#appear/away public methods are exposed automatically to client-side invocation through the perform method.
-(function() {
-  let extend = undefined;
-  const Cls = (ActionCable.Subscription = class Subscription {
-    static initClass() {
-  
-      extend = function(object, properties) {
-        if (properties != null) {
-          for (let key in properties) {
-            const value = properties[key];
-            object[key] = value;
-          }
-        }
-        return object;
-      };
+ActionCable.Subscription = (function() {
+  const extend = function(object, properties) {
+    if (properties != null) {
+      for (let key in properties) {
+        const value = properties[key];
+        object[key] = value;
+      }
     }
+    return object;
+  };
+
+  class Subscription {
     constructor(consumer, params, mixin) {
       this.consumer = consumer;
       if (params == null) { params = {}; }
@@ -98,7 +94,7 @@
     unsubscribe() {
       return this.consumer.subscriptions.remove(this);
     }
-  });
-  Cls.initClass();
-  return Cls;
+  }
+
+  return Subscription;
 })();
