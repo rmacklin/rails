@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 // Responsible for ensuring the cable connection is in good health by validating the heartbeat pings sent from the server, and attempting
 // revival reconnections if things go astray. Internal class, not intended for direct user manipulation.
 ActionCable.ConnectionMonitor = (function() {
@@ -25,7 +20,7 @@ ActionCable.ConnectionMonitor = (function() {
         delete this.stoppedAt;
         this.startPolling();
         document.addEventListener("visibilitychange", this.visibilityDidChange);
-        return ActionCable.log(`ConnectionMonitor started. pollInterval = ${this.getPollInterval()} ms`);
+        ActionCable.log(`ConnectionMonitor started. pollInterval = ${this.getPollInterval()} ms`);
       }
     }
 
@@ -34,7 +29,7 @@ ActionCable.ConnectionMonitor = (function() {
         this.stoppedAt = now();
         this.stopPolling();
         document.removeEventListener("visibilitychange", this.visibilityDidChange);
-        return ActionCable.log("ConnectionMonitor stopped");
+        ActionCable.log("ConnectionMonitor stopped");
       }
     }
 
@@ -43,36 +38,36 @@ ActionCable.ConnectionMonitor = (function() {
     }
 
     recordPing() {
-      return this.pingedAt = now();
+      this.pingedAt = now();
     }
 
     recordConnect() {
       this.reconnectAttempts = 0;
       this.recordPing();
       delete this.disconnectedAt;
-      return ActionCable.log("ConnectionMonitor recorded connect");
+      ActionCable.log("ConnectionMonitor recorded connect");
     }
 
     recordDisconnect() {
       this.disconnectedAt = now();
-      return ActionCable.log("ConnectionMonitor recorded disconnect");
+      ActionCable.log("ConnectionMonitor recorded disconnect");
     }
 
     // Private
 
     startPolling() {
       this.stopPolling();
-      return this.poll();
+      this.poll();
     }
 
     stopPolling() {
-      return clearTimeout(this.pollTimeout);
+      clearTimeout(this.pollTimeout);
     }
 
     poll() {
-      return this.pollTimeout = setTimeout(() => {
+      this.pollTimeout = setTimeout(() => {
         this.reconnectIfStale();
-        return this.poll();
+        this.poll();
       }
       , this.getPollInterval());
     }
@@ -88,10 +83,10 @@ ActionCable.ConnectionMonitor = (function() {
         ActionCable.log(`ConnectionMonitor detected stale connection. reconnectAttempts = ${this.reconnectAttempts}, pollInterval = ${this.getPollInterval()} ms, time disconnected = ${secondsSince(this.disconnectedAt)} s, stale threshold = ${this.constructor.staleThreshold} s`);
         this.reconnectAttempts++;
         if (this.disconnectedRecently()) {
-          return ActionCable.log("ConnectionMonitor skipping reopening recent disconnect");
+          ActionCable.log("ConnectionMonitor skipping reopening recent disconnect");
         } else {
           ActionCable.log("ConnectionMonitor reopening");
-          return this.connection.reopen();
+          this.connection.reopen();
         }
       }
     }
@@ -106,10 +101,10 @@ ActionCable.ConnectionMonitor = (function() {
 
     visibilityDidChange() {
       if (document.visibilityState === "visible") {
-        return setTimeout(() => {
+        setTimeout(() => {
           if (this.connectionIsStale() || !this.connection.isOpen()) {
             ActionCable.log(`ConnectionMonitor reopening stale connection on visibilitychange. visbilityState = ${document.visibilityState}`);
-            return this.connection.reopen();
+            this.connection.reopen();
           }
         }
         , 200);
