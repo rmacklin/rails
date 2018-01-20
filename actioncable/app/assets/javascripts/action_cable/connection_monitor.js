@@ -1,7 +1,6 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Responsible for ensuring the cable connection is in good health by validating the heartbeat pings sent from the server, and attempting
@@ -40,7 +39,7 @@ ActionCable.ConnectionMonitor = (function() {
     }
 
     isRunning() {
-      return (this.startedAt != null) && (this.stoppedAt == null);
+      return this.startedAt && !this.stoppedAt;
     }
 
     recordPing() {
@@ -98,7 +97,7 @@ ActionCable.ConnectionMonitor = (function() {
     }
 
     connectionIsStale() {
-      return secondsSince(this.pingedAt != null ? this.pingedAt : this.startedAt) > this.constructor.staleThreshold;
+      return secondsSince(this.pingedAt ? this.pingedAt : this.startedAt) > this.constructor.staleThreshold;
     }
 
     disconnectedRecently() {
