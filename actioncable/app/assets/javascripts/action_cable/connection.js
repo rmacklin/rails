@@ -49,9 +49,7 @@ ActionCable.Connection = (function() {
       }
     }
 
-    close(param) {
-      if (param == null) { param = {allowReconnect: true}; }
-      const {allowReconnect} = param;
+    close({allowReconnect} = {allowReconnect: true}) {
       if (!allowReconnect) { this.monitor.stop(); }
       if (this.isActive()) { return (this.webSocket != null ? this.webSocket.close() : undefined); }
     }
