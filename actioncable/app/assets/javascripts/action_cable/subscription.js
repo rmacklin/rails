@@ -1,7 +1,6 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // A new subscription is created through the ActionCable.Subscriptions instance available on the consumer.
@@ -73,16 +72,14 @@ ActionCable.Subscription = (function() {
   };
 
   class Subscription {
-    constructor(consumer, params, mixin) {
+    constructor(consumer, params = {}, mixin) {
       this.consumer = consumer;
-      if (params == null) { params = {}; }
       this.identifier = JSON.stringify(params);
       extend(this, mixin);
     }
 
     // Perform a channel action with the optional data passed as an attribute
-    perform(action, data) {
-      if (data == null) { data = {}; }
+    perform(action, data = {}) {
       data.action = action;
       return this.send(data);
     }
