@@ -59,7 +59,7 @@ ActionCable.Connection = (function() {
         try {
           return this.close();
         } catch (error) {
-          return ActionCable.log("Failed to reopen WebSocket", error);
+          ActionCable.log("Failed to reopen WebSocket", error);
         }
         finally {
           ActionCable.log(`Reopening WebSocket in ${this.constructor.reopenDelay}ms`);
@@ -150,7 +150,7 @@ ActionCable.Connection = (function() {
     },
 
     error() {
-      return ActionCable.log("WebSocket onerror event");
+      ActionCable.log("WebSocket onerror event");
     }
   };
 
