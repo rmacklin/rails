@@ -3,7 +3,7 @@
 #= require ./action_cable/consumer
 
 @ActionCable =
-  INTERNAL: <%= ActionCable::INTERNAL.to_json %>
+  INTERNAL: '<%= ActionCable::INTERNAL.to_json %>'
   WebSocket: window.WebSocket
   logger: window.console
 
