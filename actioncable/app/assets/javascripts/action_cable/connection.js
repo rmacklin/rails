@@ -1,7 +1,6 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS201: Simplify complex destructure assignments
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 //= require ./connection_monitor
@@ -9,9 +8,8 @@
 // Encapsulate the cable connection held by the consumer. This is an internal class not intended for direct user manipulation.
 
 const {message_types, protocols} = ActionCable.INTERNAL;
-const adjustedLength = Math.max(protocols.length, 1),
-  supportedProtocols = protocols.slice(0, adjustedLength - 1),
-  unsupportedProtocol = protocols[adjustedLength - 1];
+const supportedProtocols = protocols.slice(0, protocols.length - 1),
+  unsupportedProtocol = protocols[protocols.length - 1];
 
 ActionCable.Connection = (function() {
   const indexOf = [].indexOf;
