@@ -2,7 +2,6 @@
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
  * DS201: Simplify complex destructure assignments
- * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 //= require ./connection_monitor
@@ -41,7 +40,7 @@ ActionCable.Connection = (function() {
         return false;
       } else {
         ActionCable.log(`Opening WebSocket, current state is ${this.getState()}, subprotocols: ${protocols}`);
-        if (this.webSocket != null) { this.uninstallEventHandlers(); }
+        if (this.webSocket) { this.uninstallEventHandlers(); }
         this.webSocket = new ActionCable.WebSocket(this.consumer.url, protocols);
         this.installEventHandlers();
         this.monitor.start();
@@ -51,7 +50,7 @@ ActionCable.Connection = (function() {
 
     close({allowReconnect} = {allowReconnect: true}) {
       if (!allowReconnect) { this.monitor.stop(); }
-      if (this.isActive()) { return (this.webSocket != null ? this.webSocket.close() : undefined); }
+      if (this.isActive()) { return (this.webSocket ? this.webSocket.close() : undefined); }
     }
 
     reopen() {
@@ -72,7 +71,7 @@ ActionCable.Connection = (function() {
     }
 
     getProtocol() {
-      return (this.webSocket != null ? this.webSocket.protocol : undefined);
+      return (this.webSocket ? this.webSocket.protocol : undefined);
     }
 
     isOpen() {
@@ -94,7 +93,7 @@ ActionCable.Connection = (function() {
     }
 
     getState() {
-      for (let state in WebSocket) { const value = WebSocket[state]; if (value === (this.webSocket != null ? this.webSocket.readyState : undefined)) { return state.toLowerCase(); } }
+      for (let state in WebSocket) { const value = WebSocket[state]; if (value === (this.webSocket ? this.webSocket.readyState : undefined)) { return state.toLowerCase(); } }
       return null;
     }
 
