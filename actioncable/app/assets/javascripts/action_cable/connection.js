@@ -1,10 +1,7 @@
 /*
  * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
- * DS104: Avoid inline assignments
  * DS201: Simplify complex destructure assignments
- * DS204: Change includes calls to have a more natural evaluation order
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
@@ -18,6 +15,8 @@ const adjustedLength = Math.max(protocols.length, 1),
   unsupportedProtocol = protocols[adjustedLength - 1];
 
 ActionCable.Connection = (function() {
+  const indexOf = [].indexOf;
+
   class Connection {
     constructor(consumer) {
       this.open = this.open.bind(this);
@@ -88,13 +87,11 @@ ActionCable.Connection = (function() {
 
     // Private
     isProtocolSupported() {
-      let needle;
-      return (needle = this.getProtocol(), Array.from(supportedProtocols).includes(needle));
+      return indexOf.call(supportedProtocols, this.getProtocol()) >= 0;
     }
 
     isState(...states) {
-      let needle;
-      return (needle = this.getState(), Array.from(states).includes(needle));
+      return indexOf.call(states, this.getState()) >= 0;
     }
 
     getState() {
