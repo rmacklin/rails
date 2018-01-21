@@ -3,8 +3,7 @@
 // Encapsulate the cable connection held by the consumer. This is an internal class not intended for direct user manipulation.
 
 const {message_types, protocols} = ActionCable.INTERNAL
-const supportedProtocols = protocols.slice(0, protocols.length - 1),
-  unsupportedProtocol = protocols[protocols.length - 1]
+const supportedProtocols = protocols.slice(0, protocols.length - 1)
 
 ActionCable.Connection = (function() {
   const indexOf = [].indexOf
