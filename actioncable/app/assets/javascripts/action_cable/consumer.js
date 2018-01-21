@@ -29,26 +29,26 @@
 // automatically resubscribe.
 ActionCable.Consumer = class Consumer {
   constructor(url) {
-    this.url = url;
-    this.subscriptions = new ActionCable.Subscriptions(this);
-    this.connection = new ActionCable.Connection(this);
+    this.url = url
+    this.subscriptions = new ActionCable.Subscriptions(this)
+    this.connection = new ActionCable.Connection(this)
   }
 
   send(data) {
-    return this.connection.send(data);
+    return this.connection.send(data)
   }
 
   connect() {
-    return this.connection.open();
+    return this.connection.open()
   }
 
   disconnect() {
-    return this.connection.close({allowReconnect: false});
+    return this.connection.close({allowReconnect: false})
   }
 
   ensureActiveConnection() {
     if (!this.connection.isActive()) {
-      return this.connection.open();
+      return this.connection.open()
     }
   }
-};
+}

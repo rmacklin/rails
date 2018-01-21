@@ -9,42 +9,42 @@ this.ActionCable = {
 
   createConsumer(url) {
     if (url == null) {
-      const urlConfig = this.getConfig("url");
-      url = (urlConfig ? urlConfig : this.INTERNAL.default_mount_path);
+      const urlConfig = this.getConfig("url")
+      url = (urlConfig ? urlConfig : this.INTERNAL.default_mount_path)
     }
-    return new ActionCable.Consumer(this.createWebSocketURL(url));
+    return new ActionCable.Consumer(this.createWebSocketURL(url))
   },
 
   getConfig(name) {
-    const element = document.head.querySelector(`meta[name='action-cable-${name}']`);
-    return (element ? element.getAttribute("content") : undefined);
+    const element = document.head.querySelector(`meta[name='action-cable-${name}']`)
+    return (element ? element.getAttribute("content") : undefined)
   },
 
   createWebSocketURL(url) {
     if (url && !/^wss?:/i.test(url)) {
-      const a = document.createElement("a");
-      a.href = url;
+      const a = document.createElement("a")
+      a.href = url
       // Fix populating Location properties in IE. Otherwise, protocol will be blank.
-      a.href = a.href;
-      a.protocol = a.protocol.replace("http", "ws");
-      return a.href;
+      a.href = a.href
+      a.protocol = a.protocol.replace("http", "ws")
+      return a.href
     } else {
-      return url;
+      return url
     }
   },
 
   startDebugging() {
-    this.debugging = true;
+    this.debugging = true
   },
 
   stopDebugging() {
-    this.debugging = null;
+    this.debugging = null
   },
 
   log(...messages) {
     if (this.debugging) {
-      messages.push(Date.now());
-      this.logger.log("[ActionCable]", ...messages);
+      messages.push(Date.now())
+      this.logger.log("[ActionCable]", ...messages)
     }
   }
-};
+}
