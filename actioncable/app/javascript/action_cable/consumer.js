@@ -1,6 +1,5 @@
-//= require ./connection
-//= require ./subscriptions
-//= require ./subscription
+import Connection from "./connection"
+import Subscriptions from "./subscriptions"
 
 // The ActionCable.Consumer establishes the connection to a server-side Ruby Connection object. Once established,
 // the ActionCable.ConnectionMonitor will ensure that its properly maintained through heartbeats and checking for stale updates.
@@ -27,11 +26,11 @@
 //
 // Any channel subscriptions which existed prior to disconnecting will
 // automatically resubscribe.
-ActionCable.Consumer = class Consumer {
+export default class Consumer {
   constructor(url) {
     this.url = url
-    this.subscriptions = new ActionCable.Subscriptions(this)
-    this.connection = new ActionCable.Connection(this)
+    this.subscriptions = new Subscriptions(this)
+    this.connection = new Connection(this)
   }
 
   send(data) {
