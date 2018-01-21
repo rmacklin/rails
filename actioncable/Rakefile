@@ -35,6 +35,16 @@ namespace :test do
 end
 
 namespace :assets do
+  desc "Generate ActionCable::INTERNAL JS module"
+  task :codegen do
+    require "json"
+    require "action_cable"
+
+    File.open(File.join(__dir__, "app/javascript/action_cable/internal.js").to_s, "w+") do |file|
+      file.write("export default #{JSON.generate(ActionCable::INTERNAL)}")
+    end
+  end
+
   desc "Compile Action Cable assets"
   task :compile do
     require "blade"
