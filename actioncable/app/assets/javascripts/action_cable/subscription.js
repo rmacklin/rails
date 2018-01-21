@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 // A new subscription is created through the ActionCable.Subscriptions instance available on the consumer.
 // It provides a number of callbacks and a method for calling remote procedure calls on the corresponding
 // Channel instance on the server side.
