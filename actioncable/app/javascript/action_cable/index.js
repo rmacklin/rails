@@ -1,9 +1,11 @@
-//= export ActionCable
-//= require_self
-//= require ./action_cable/consumer
+import Connection from "./connection"
+import ConnectionMonitor from "./connection_monitor"
+import Consumer from "./consumer"
+import INTERNAL from "./internal"
+import Subscription from "./subscription"
+import Subscriptions from "./subscriptions"
 
-this.ActionCable = {
-  INTERNAL: <%= ActionCable::INTERNAL.to_json %>,
+const ActionCable = {
   WebSocket: window.WebSocket,
   logger: window.console,
 
@@ -48,3 +50,12 @@ this.ActionCable = {
     }
   }
 }
+
+ActionCable.Connection = Connection
+ActionCable.ConnectionMonitor = ConnectionMonitor
+ActionCable.Consumer = Consumer
+ActionCable.INTERNAL = INTERNAL
+ActionCable.Subscription = Subscription
+ActionCable.Subscriptions = Subscriptions
+
+export default ActionCable
