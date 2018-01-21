@@ -1,6 +1,5 @@
 /*
  * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
  * DS104: Avoid inline assignments
  * DS207: Consider shorter variations of null checks
@@ -51,7 +50,7 @@ this.ActionCable = {
   log(...messages) {
     if (this.debugging) {
       messages.push(Date.now());
-      return this.logger.log("[ActionCable]", ...Array.from(messages));
+      return this.logger.log("[ActionCable]", ...messages);
     }
   }
 };
