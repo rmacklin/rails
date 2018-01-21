@@ -59,34 +59,34 @@ ActionCable.Subscription = (function() {
   const extend = function(object, properties) {
     if (properties != null) {
       for (let key in properties) {
-        const value = properties[key];
-        object[key] = value;
+        const value = properties[key]
+        object[key] = value
       }
     }
-    return object;
-  };
+    return object
+  }
 
   class Subscription {
     constructor(consumer, params = {}, mixin) {
-      this.consumer = consumer;
-      this.identifier = JSON.stringify(params);
-      extend(this, mixin);
+      this.consumer = consumer
+      this.identifier = JSON.stringify(params)
+      extend(this, mixin)
     }
 
     // Perform a channel action with the optional data passed as an attribute
     perform(action, data = {}) {
-      data.action = action;
-      return this.send(data);
+      data.action = action
+      return this.send(data)
     }
 
     send(data) {
-      return this.consumer.send({command: "message", identifier: this.identifier, data: JSON.stringify(data)});
+      return this.consumer.send({command: "message", identifier: this.identifier, data: JSON.stringify(data)})
     }
 
     unsubscribe() {
-      return this.consumer.subscriptions.remove(this);
+      return this.consumer.subscriptions.remove(this)
     }
   }
 
-  return Subscription;
-})();
+  return Subscription
+})()
