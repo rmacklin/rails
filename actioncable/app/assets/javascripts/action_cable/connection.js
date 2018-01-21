@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 //= require ./connection_monitor
 
 // Encapsulate the cable connection held by the consumer. This is an internal class not intended for direct user manipulation.
