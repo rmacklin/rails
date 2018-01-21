@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 // Collection class for creating (and internally managing) channel subscriptions. The only method intended to be triggered by the user
 // us ActionCable.Subscriptions#create, and it should be called through the consumer like so:
 //
