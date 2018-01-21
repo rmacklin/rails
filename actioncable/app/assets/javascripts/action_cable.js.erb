@@ -1,6 +1,5 @@
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
  * DS208: Avoid top-level this
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
@@ -40,17 +39,17 @@ this.ActionCable = {
   },
 
   startDebugging() {
-    return this.debugging = true;
+    this.debugging = true;
   },
 
   stopDebugging() {
-    return this.debugging = null;
+    this.debugging = null;
   },
 
   log(...messages) {
     if (this.debugging) {
       messages.push(Date.now());
-      return this.logger.log("[ActionCable]", ...messages);
+      this.logger.log("[ActionCable]", ...messages);
     }
   }
 };
