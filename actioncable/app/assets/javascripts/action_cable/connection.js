@@ -13,7 +13,7 @@ ActionCable.Connection = (function() {
     constructor(consumer) {
       this.open = this.open.bind(this);
       this.consumer = consumer;
-      ({subscriptions: this.subscriptions} = this.consumer);
+      this.subscriptions = this.consumer.subscriptions;
       this.monitor = new ActionCable.ConnectionMonitor(this);
       this.disconnected = true;
     }
