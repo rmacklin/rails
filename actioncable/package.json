@@ -34,6 +34,8 @@
     "rollup-plugin-uglify": "^3.0.0"
   },
   "scripts": {
+    "prebuild": "yarn lint",
+    "build": "rollup --config rollup.config.js",
     "lint": "eslint app/javascript"
   }
 }
