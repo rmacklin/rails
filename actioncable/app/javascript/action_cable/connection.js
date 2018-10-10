@@ -1,4 +1,4 @@
-import ActionCable from "../action_cable"
+import ActionCable from "./index"
 import ConnectionMonitor from "./connection_monitor"
 import INTERNAL from "./internal"
 
