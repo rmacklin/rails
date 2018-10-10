@@ -86,7 +86,13 @@ class Connection {
   }
 
   getState() {
-    for (let state in WebSocket) { const value = WebSocket[state]; if (value === (this.webSocket ? this.webSocket.readyState : undefined)) { return state.toLowerCase() } }
+    for (let state in WebSocket) {
+      const value = WebSocket[state]
+
+      if (value === (this.webSocket ? this.webSocket.readyState : undefined)) {
+        return state.toLowerCase()
+      }
+    }
     return null
   }
 
