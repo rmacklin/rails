@@ -2,9 +2,9 @@
   "name": "actioncable",
   "version": "6.0.0-alpha",
   "description": "WebSocket framework for Ruby on Rails.",
-  "main": "lib/assets/compiled/action_cable.js",
+  "main": "app/assets/javascripts/action_cable.js",
   "files": [
-    "lib/assets/compiled/*.js"
+    "app/assets/javascripts/*.js"
   ],
   "repository": {
     "type": "git",
