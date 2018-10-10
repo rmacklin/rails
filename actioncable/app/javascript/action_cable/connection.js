@@ -1,8 +1,9 @@
 import ActionCable from "./index"
+import INTERNAL from "./internal"
 
 // Encapsulate the cable connection held by the consumer. This is an internal class not intended for direct user manipulation.
 
-const {message_types, protocols} = ActionCable.INTERNAL
+const {message_types, protocols} = INTERNAL
 const supportedProtocols = protocols.slice(0, protocols.length - 1)
 
 const indexOf = [].indexOf
