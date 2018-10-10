@@ -1,9 +1,9 @@
-import Connection from "./action_cable/connection"
-import ConnectionMonitor from "./action_cable/connection_monitor"
-import Consumer from "./action_cable/consumer"
-import INTERNAL from "./action_cable/internal"
-import Subscription from "./action_cable/subscription"
-import Subscriptions from "./action_cable/subscriptions"
+import Connection from "./connection"
+import ConnectionMonitor from "./connection_monitor"
+import Consumer from "./consumer"
+import INTERNAL from "./internal"
+import Subscription from "./subscription"
+import Subscriptions from "./subscriptions"
 
 const ActionCable = {
   INTERNAL,
