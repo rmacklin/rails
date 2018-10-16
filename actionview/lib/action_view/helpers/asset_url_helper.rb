@@ -120,6 +120,8 @@ module ActionView
     module AssetUrlHelper
       URI_REGEXP = %r{^[-a-z]+://|^(?:cid|data):|^//}i
 
+      mattr_accessor :skip_pipeline
+
       # This is the entry point for all assets.
       # When using the asset pipeline (i.e. sprockets and sprockets-rails), the
       # behavior is "enhanced". You can bypass the asset pipeline by passing in
@@ -195,7 +197,7 @@ module ActionView
         end
 
         if source[0] != ?/
-          if options[:skip_pipeline]
+          if AssetUrlHelper.skip_pipeline || options[:skip_pipeline]
             source = public_compute_asset_path(source, options)
           else
             source = compute_asset_path(source, options)
