@@ -13,7 +13,7 @@ const uglifyOptions = {
 }
 
 export default {
-  input: "app/javascript/action_cable/index.js",
+  input: "app/javascript/action_cable/index_with_api_bridge.js",
   output: {
     file: "app/assets/javascripts/action_cable.js",
     format: "umd",
