@@ -7,7 +7,6 @@ import Subscriptions from "./subscriptions"
 
 const ActionCable = {
   INTERNAL,
-  WebSocket: window.WebSocket,
 
   createConsumer(url) {
     if (url == null) {
