@@ -1,7 +1,7 @@
-import { ActionCable } from "./action_cable"
 import ConnectionMonitor from "./connection_monitor"
 import INTERNAL from "./internal"
 import { log } from "./logger"
+import { WebSocketAdapter } from "./websocket_adapter"
 
 // Encapsulate the cable connection held by the consumer. This is an internal class not intended for direct user manipulation.
 
@@ -35,7 +35,7 @@ class Connection {
     } else {
       log(`Opening WebSocket, current state is ${this.getState()}, subprotocols: ${protocols}`)
       if (this.webSocket) { this.uninstallEventHandlers() }
-      this.webSocket = new ActionCable.WebSocket(this.consumer.url, protocols)
+      this.webSocket = new WebSocketAdapter(this.consumer.url, protocols)
       this.installEventHandlers()
       this.monitor.start()
       return true
@@ -87,8 +87,8 @@ class Connection {
   }
 
   getState() {
-    for (let state in ActionCable.WebSocket) {
-      const value = ActionCable.WebSocket[state]
+    for (let state in WebSocketAdapter) {
+      const value = WebSocketAdapter[state]
 
       if (value === (this.webSocket ? this.webSocket.readyState : undefined)) {
         return state.toLowerCase()
