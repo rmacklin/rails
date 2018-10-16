@@ -8,7 +8,6 @@ import Subscriptions from "./subscriptions"
 const ActionCable = {
   INTERNAL,
   WebSocket: window.WebSocket,
-  logger: window.console,
 
   createConsumer(url) {
     if (url == null) {
@@ -33,21 +32,6 @@ const ActionCable = {
       return a.href
     } else {
       return url
-    }
-  },
-
-  startDebugging() {
-    this.debugging = true
-  },
-
-  stopDebugging() {
-    this.debugging = null
-  },
-
-  log(...messages) {
-    if (this.debugging) {
-      messages.push(Date.now())
-      this.logger.log("[ActionCable]", ...messages)
     }
   }
 }
