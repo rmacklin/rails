@@ -183,6 +183,7 @@
     default_mount_path: "/cable",
     protocols: [ "actioncable-v1-json", "actioncable-unsupported" ]
   };
+  var WebSocketAdapter = window.WebSocket;
   var message_types = INTERNAL.message_types, protocols = INTERNAL.protocols;
   var supportedProtocols = protocols.slice(0, protocols.length - 1);
   var indexOf = [].indexOf;
@@ -216,7 +217,7 @@
           if (this.webSocket) {
             this.uninstallEventHandlers();
           }
-          this.webSocket = new ActionCable.WebSocket(this.consumer.url, protocols);
+          this.webSocket = new WebSocketAdapter(this.consumer.url, protocols);
           this.installEventHandlers();
           this.monitor.start();
           return true;
@@ -283,8 +284,8 @@
     }, {
       key: "getState",
       value: function getState() {
-        for (var state in ActionCable.WebSocket) {
-          var value = ActionCable.WebSocket[state];
+        for (var state in WebSocketAdapter) {
+          var value = WebSocketAdapter[state];
           if (value === (this.webSocket ? this.webSocket.readyState : undefined)) {
             return state.toLowerCase();
           }
@@ -585,7 +586,6 @@
   }();
   var ActionCable = {
     INTERNAL: INTERNAL,
-    WebSocket: window.WebSocket,
     createConsumer: function createConsumer(url) {
       if (url == null) {
         var urlConfig = this.getConfig("url");
