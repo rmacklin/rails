@@ -38,13 +38,11 @@ ActionCable.Subscriptions = class Subscriptions {
   }
 
   reject(identifier) {
-    const result = []
-    for (let subscription of this.findAll(identifier)) {
+    return this.findAll(identifier).map((subscription) => {
       this.forget(subscription)
       this.notify(subscription, "rejected")
-      result.push(subscription)
-    }
-    return result
+      return subscription
+    })
   }
 
   forget(subscription) {
@@ -74,11 +72,8 @@ ActionCable.Subscriptions = class Subscriptions {
       subscriptions = [subscription]
     }
 
-    const result = []
-    for (subscription of subscriptions) {
-      result.push((typeof subscription[callbackName] === "function" ? subscription[callbackName](...args) : undefined))
-    }
-    return result
+    return subscriptions.map((subscription) =>
+      (typeof subscription[callbackName] === "function" ? subscription[callbackName](...args) : undefined))
   }
 
   sendCommand(subscription, command) {
