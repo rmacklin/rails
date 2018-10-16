@@ -643,6 +643,7 @@
       }
     }
   });
+  ActionCable.INTERNAL = INTERNAL;
   ActionCable.log = log;
   ActionCable.startDebugging = startDebugging;
   ActionCable.stopDebugging = stopDebugging;
