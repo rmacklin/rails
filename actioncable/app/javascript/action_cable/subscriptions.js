@@ -41,11 +41,11 @@ export default class Subscriptions {
 
   reject(identifier) {
     const result = []
-    for (let subscription of this.findAll(identifier)) {
+    this.findAll(identifier).forEach((subscription) => {
       this.forget(subscription)
       this.notify(subscription, "rejected")
       result.push(subscription)
-    }
+    })
     return result
   }
 
@@ -77,9 +77,9 @@ export default class Subscriptions {
     }
 
     const result = []
-    for (subscription of subscriptions) {
+    subscriptions.forEach((subscription) => {
       result.push((typeof subscription[callbackName] === "function" ? subscription[callbackName](...args) : undefined))
-    }
+    })
     return result
   }
 

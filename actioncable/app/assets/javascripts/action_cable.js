@@ -451,31 +451,13 @@
     }, {
       key: "reject",
       value: function reject(identifier) {
+        var _this = this;
         var result = [];
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-        try {
-          for (var _iterator = this.findAll(identifier)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var subscription = _step.value;
-            this.forget(subscription);
-            this.notify(subscription, "rejected");
-            result.push(subscription);
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
+        this.findAll(identifier).forEach(function(subscription) {
+          _this.forget(subscription);
+          _this.notify(subscription, "rejected");
+          result.push(subscription);
+        });
         return result;
       }
     }, {
@@ -496,25 +478,28 @@
     }, {
       key: "reload",
       value: function reload() {
-        var _this = this;
+        var _this2 = this;
         return this.subscriptions.map(function(subscription) {
-          return _this.sendCommand(subscription, "subscribe");
+          return _this2.sendCommand(subscription, "subscribe");
         });
       }
     }, {
       key: "notifyAll",
       value: function notifyAll(callbackName) {
-        var _this2 = this;
+        var _this3 = this;
         for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
           args[_key - 1] = arguments[_key];
         }
         return this.subscriptions.map(function(subscription) {
-          return _this2.notify.apply(_this2, [ subscription, callbackName ].concat(args));
+          return _this3.notify.apply(_this3, [ subscription, callbackName ].concat(args));
         });
       }
     }, {
       key: "notify",
       value: function notify(subscription, callbackName) {
+        for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+          args[_key2 - 2] = arguments[_key2];
+        }
         var subscriptions = void 0;
         if (typeof subscription === "string") {
           subscriptions = this.findAll(subscription);
@@ -522,32 +507,9 @@
           subscriptions = [ subscription ];
         }
         var result = [];
-        for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-          args[_key2 - 2] = arguments[_key2];
-        }
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-        try {
-          for (var _iterator2 = subscriptions[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var _subscription;
-            subscription = _step2.value;
-            result.push(typeof subscription[callbackName] === "function" ? (_subscription = subscription)[callbackName].apply(_subscription, args) : undefined);
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
-        }
+        subscriptions.forEach(function(subscription) {
+          result.push(typeof subscription[callbackName] === "function" ? subscription[callbackName].apply(subscription, args) : undefined);
+        });
         return result;
       }
     }, {
