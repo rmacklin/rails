@@ -6,12 +6,10 @@ import Subscription from "./subscription"
 import Subscriptions from "./subscriptions"
 
 const ActionCable = {
-  INTERNAL,
-
   createConsumer(url) {
     if (url == null) {
       const urlConfig = this.getConfig("url")
-      url = (urlConfig ? urlConfig : this.INTERNAL.default_mount_path)
+      url = (urlConfig ? urlConfig : INTERNAL.default_mount_path)
     }
     return new Consumer(this.createWebSocketURL(url))
   },
