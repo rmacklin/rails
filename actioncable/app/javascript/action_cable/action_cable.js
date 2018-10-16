@@ -1,4 +1,5 @@
 import Consumer from "./consumer"
+import INTERNAL from "./internal"
 
 export default {
   WebSocket: window.WebSocket,
@@ -6,7 +7,7 @@ export default {
   createConsumer(url) {
     if (url == null) {
       const urlConfig = this.getConfig("url")
-      url = (urlConfig ? urlConfig : this.INTERNAL.default_mount_path)
+      url = (urlConfig ? urlConfig : INTERNAL.default_mount_path)
     }
     return new Consumer(this.createWebSocketURL(url))
   },
