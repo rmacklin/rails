@@ -14,6 +14,15 @@
       (_logger = logger).log.apply(_logger, [ "[ActionCable]" ].concat(messages));
     }
   }
+  function setLogger(newLogger) {
+    logger = newLogger;
+  }
+  function startDebugging() {
+    enabled = true;
+  }
+  function stopDebugging() {
+    enabled = false;
+  }
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function(obj) {
     return typeof obj;
   } : function(obj) {
@@ -184,6 +193,9 @@
     protocols: [ "actioncable-v1-json", "actioncable-unsupported" ]
   };
   var WebSocketAdapter = window.WebSocket;
+  function setAdapter(adapter) {
+    WebSocketAdapter = adapter;
+  }
   var message_types = INTERNAL.message_types, protocols = INTERNAL.protocols;
   var supportedProtocols = protocols.slice(0, protocols.length - 1);
   var indexOf = [].indexOf;
@@ -613,5 +625,27 @@
   ActionCable.Consumer = Consumer;
   ActionCable.Subscription = Subscription;
   ActionCable.Subscriptions = Subscriptions;
+  Object.defineProperties(ActionCable, {
+    WebSocket: {
+      get: function get() {
+        return WebSocketAdapter;
+      },
+      set: function set(value) {
+        setAdapter(value);
+      }
+    },
+    logger: {
+      get: function get() {
+        return logger;
+      },
+      set: function set(value) {
+        setLogger(value);
+      }
+    }
+  });
+  ActionCable.INTERNAL = INTERNAL;
+  ActionCable.log = log;
+  ActionCable.startDebugging = startDebugging;
+  ActionCable.stopDebugging = stopDebugging;
   return ActionCable;
 });
