@@ -5,6 +5,7 @@
 // bridge.
 
 import ActionCable from "./index"
+import INTERNAL from "./internal"
 import { log, logger, setLogger, startDebugging, stopDebugging } from "./logger"
 import { setAdapter, WebSocketAdapter } from "./websocket_adapter"
 
@@ -19,6 +20,7 @@ Object.defineProperties(ActionCable, {
   }
 })
 
+ActionCable.INTERNAL = INTERNAL
 ActionCable.log = log
 ActionCable.startDebugging = startDebugging
 ActionCable.stopDebugging = stopDebugging
