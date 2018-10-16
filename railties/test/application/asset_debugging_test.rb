@@ -160,6 +160,32 @@ module ApplicationTests
       end
     end
 
+    test "ActionView::Helpers::AssetUrlHelper.skip_pipeline skips asset processing" do
+      cases = {
+        /\/assets\/application-.*.\.js/ => false,
+        /application.js/                => true,
+      }
+      cases.each do |(tag_match, skip_pipeline_value)|
+        app_file "app/assets/javascripts/application.js.erb", "<%= sleep 1 %>"
+        app_file "app/views/posts/index.html.erb", "<%= asset_path('application.js') %>"
+
+        app "development"
+
+        class ::PostsController < ActionController::Base ; end
+        ActionView::Helpers::AssetUrlHelper.skip_pipeline = skip_pipeline_value
+
+        start_time = Time.now
+        get "/posts?debug_assets=true"
+        end_time = Time.now
+
+        puts (end_time - start_time)
+
+        body = last_response.body.strip
+        comparison = skip_pipeline_value ? :< : :>
+        assert (end_time - start_time).send(comparison, 1)
+      end
+    end
+
     test "public_compute_asset_path does not use the asset pipeline" do
       cases = {
         compute_asset_path:        /\/assets\/application-.*.\.js/,
