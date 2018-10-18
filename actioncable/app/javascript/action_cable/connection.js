@@ -77,6 +77,7 @@ class Connection {
   }
 
   // Private
+
   isProtocolSupported() {
     return indexOf.call(supportedProtocols, this.getProtocol()) >= 0
   }
