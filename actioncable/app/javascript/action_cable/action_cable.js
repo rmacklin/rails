@@ -1,4 +1,4 @@
-import ActionCable from "./index"
+import Consumer from "./consumer"
 
 export default {
   WebSocket: window.WebSocket,
@@ -9,7 +9,7 @@ export default {
       const urlConfig = this.getConfig("url")
       url = (urlConfig ? urlConfig : this.INTERNAL.default_mount_path)
     }
-    return new ActionCable.Consumer(this.createWebSocketURL(url))
+    return new Consumer(this.createWebSocketURL(url))
   },
 
   getConfig(name) {
