@@ -41,13 +41,11 @@ export default class Subscriptions {
   }
 
   reject(identifier) {
-    const result = []
-    this.findAll(identifier).forEach((subscription) => {
+    return this.findAll(identifier).map((subscription) => {
       this.forget(subscription)
       this.notify(subscription, "rejected")
-      result.push(subscription)
+      return subscription
     })
-    return result
   }
 
   forget(subscription) {
@@ -77,11 +75,8 @@ export default class Subscriptions {
       subscriptions = [subscription]
     }
 
-    const result = []
-    subscriptions.forEach((subscription) => {
-      result.push((typeof subscription[callbackName] === "function" ? subscription[callbackName](...args) : undefined))
-    })
-    return result
+    return subscriptions.map((subscription) =>
+      (typeof subscription[callbackName] === "function" ? subscription[callbackName](...args) : undefined))
   }
 
   sendCommand(subscription, command) {

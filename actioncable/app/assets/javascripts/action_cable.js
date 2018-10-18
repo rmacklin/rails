@@ -452,13 +452,11 @@
       key: "reject",
       value: function reject(identifier) {
         var _this = this;
-        var result = [];
-        this.findAll(identifier).forEach(function(subscription) {
+        return this.findAll(identifier).map(function(subscription) {
           _this.forget(subscription);
           _this.notify(subscription, "rejected");
-          result.push(subscription);
+          return subscription;
         });
-        return result;
       }
     }, {
       key: "forget",
@@ -506,11 +504,9 @@
         } else {
           subscriptions = [ subscription ];
         }
-        var result = [];
-        subscriptions.forEach(function(subscription) {
-          result.push(typeof subscription[callbackName] === "function" ? subscription[callbackName].apply(subscription, args) : undefined);
+        return subscriptions.map(function(subscription) {
+          return typeof subscription[callbackName] === "function" ? subscription[callbackName].apply(subscription, args) : undefined;
         });
-        return result;
       }
     }, {
       key: "sendCommand",
