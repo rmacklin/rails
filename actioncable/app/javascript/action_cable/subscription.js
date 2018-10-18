@@ -55,6 +55,7 @@
 //
 // The "AppearanceChannel" name is automatically mapped between the client-side subscription creation and the server-side Ruby class name.
 // The AppearanceChannel#appear/away public methods are exposed automatically to client-side invocation through the perform method.
+
 const extend = function(object, properties) {
   if (properties != null) {
     for (let key in properties) {

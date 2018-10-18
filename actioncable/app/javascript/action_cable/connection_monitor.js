@@ -2,6 +2,7 @@ import { log } from "./logger"
 
 // Responsible for ensuring the cable connection is in good health by validating the heartbeat pings sent from the server, and attempting
 // revival reconnections if things go astray. Internal class, not intended for direct user manipulation.
+
 const now = () => new Date().getTime()
 
 const secondsSince = time => (now() - time) / 1000

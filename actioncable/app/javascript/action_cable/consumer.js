@@ -26,6 +26,7 @@ import Subscriptions from "./subscriptions"
 //
 // Any channel subscriptions which existed prior to disconnecting will
 // automatically resubscribe.
+
 export default class Consumer {
   constructor(url) {
     this.url = url

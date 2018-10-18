@@ -8,6 +8,7 @@ import Subscription from "./subscription"
 //   App.appearance = App.cable.subscriptions.create("AppearanceChannel");
 //
 // For more details on how you'd configure an actual channel subscription, see ActionCable.Subscription.
+
 export default class Subscriptions {
   constructor(consumer) {
     this.consumer = consumer
