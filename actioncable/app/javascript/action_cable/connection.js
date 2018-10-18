@@ -1,4 +1,4 @@
-import ActionCable from "./index"
+import ActionCable from "./action_cable"
 import INTERNAL from "./internal"
 
 // Encapsulate the cable connection held by the consumer. This is an internal class not intended for direct user manipulation.

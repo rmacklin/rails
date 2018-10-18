@@ -1,4 +1,4 @@
-import ActionCable from "./index"
+import ActionCable from "./action_cable"
 
 // The ActionCable.Consumer establishes the connection to a server-side Ruby Connection object. Once established,
 // the ActionCable.ConnectionMonitor will ensure that its properly maintained through heartbeats and checking for stale updates.

@@ -2,16 +2,6 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : global.ActionCable = factory();
 })(this, function() {
   "use strict";
-  var INTERNAL = {
-    message_types: {
-      welcome: "welcome",
-      ping: "ping",
-      confirmation: "confirm_subscription",
-      rejection: "reject_subscription"
-    },
-    default_mount_path: "/cable",
-    protocols: [ "actioncable-v1-json", "actioncable-unsupported" ]
-  };
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function(obj) {
     return typeof obj;
   } : function(obj) {
@@ -45,6 +35,58 @@
     } else {
       return Array.from(arr);
     }
+  };
+  var ActionCable = {
+    WebSocket: window.WebSocket,
+    logger: window.console,
+    createConsumer: function createConsumer(url) {
+      if (url == null) {
+        var urlConfig = this.getConfig("url");
+        url = urlConfig ? urlConfig : this.INTERNAL.default_mount_path;
+      }
+      return new ActionCable.Consumer(this.createWebSocketURL(url));
+    },
+    getConfig: function getConfig(name) {
+      var element = document.head.querySelector("meta[name='action-cable-" + name + "']");
+      return element ? element.getAttribute("content") : undefined;
+    },
+    createWebSocketURL: function createWebSocketURL(url) {
+      if (url && !/^wss?:/i.test(url)) {
+        var a = document.createElement("a");
+        a.href = url;
+        a.href = a.href;
+        a.protocol = a.protocol.replace("http", "ws");
+        return a.href;
+      } else {
+        return url;
+      }
+    },
+    startDebugging: function startDebugging() {
+      this.debugging = true;
+    },
+    stopDebugging: function stopDebugging() {
+      this.debugging = null;
+    },
+    log: function log() {
+      if (this.debugging) {
+        var _logger;
+        for (var _len = arguments.length, messages = Array(_len), _key = 0; _key < _len; _key++) {
+          messages[_key] = arguments[_key];
+        }
+        messages.push(Date.now());
+        (_logger = this.logger).log.apply(_logger, [ "[ActionCable]" ].concat(toConsumableArray(messages)));
+      }
+    }
+  };
+  var INTERNAL = {
+    message_types: {
+      welcome: "welcome",
+      ping: "ping",
+      confirmation: "confirm_subscription",
+      rejection: "reject_subscription"
+    },
+    default_mount_path: "/cable",
+    protocols: [ "actioncable-v1-json", "actioncable-unsupported" ]
   };
   var message_types = INTERNAL.message_types, protocols = INTERNAL.protocols;
   var supportedProtocols = protocols.slice(0, protocols.length - 1);
@@ -537,48 +579,6 @@
     } ]);
     return Subscriptions;
   }();
-  var ActionCable = {
-    WebSocket: window.WebSocket,
-    logger: window.console,
-    createConsumer: function createConsumer(url) {
-      if (url == null) {
-        var urlConfig = this.getConfig("url");
-        url = urlConfig ? urlConfig : this.INTERNAL.default_mount_path;
-      }
-      return new ActionCable.Consumer(this.createWebSocketURL(url));
-    },
-    getConfig: function getConfig(name) {
-      var element = document.head.querySelector("meta[name='action-cable-" + name + "']");
-      return element ? element.getAttribute("content") : undefined;
-    },
-    createWebSocketURL: function createWebSocketURL(url) {
-      if (url && !/^wss?:/i.test(url)) {
-        var a = document.createElement("a");
-        a.href = url;
-        a.href = a.href;
-        a.protocol = a.protocol.replace("http", "ws");
-        return a.href;
-      } else {
-        return url;
-      }
-    },
-    startDebugging: function startDebugging() {
-      this.debugging = true;
-    },
-    stopDebugging: function stopDebugging() {
-      this.debugging = null;
-    },
-    log: function log() {
-      if (this.debugging) {
-        var _logger;
-        for (var _len = arguments.length, messages = Array(_len), _key = 0; _key < _len; _key++) {
-          messages[_key] = arguments[_key];
-        }
-        messages.push(Date.now());
-        (_logger = this.logger).log.apply(_logger, [ "[ActionCable]" ].concat(toConsumableArray(messages)));
-      }
-    }
-  };
   ActionCable.Connection = Connection;
   ActionCable.ConnectionMonitor = ConnectionMonitor;
   ActionCable.Consumer = Consumer;

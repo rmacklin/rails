@@ -1,4 +1,4 @@
-import ActionCable from "./index"
+import ActionCable from "./action_cable"
 
 // Collection class for creating (and internally managing) channel subscriptions. The only method intended to be triggered by the user
 // us ActionCable.Subscriptions#create, and it should be called through the consumer like so:
