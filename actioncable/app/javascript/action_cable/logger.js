@@ -1,5 +1,5 @@
 const logger = {
-  logger: window.console,
+  logger: self.console,
   enabled: false,
 }
 

@@ -3,10 +3,10 @@
 })(this, function() {
   "use strict";
   var adapters = {
-    WebSocket: window.WebSocket
+    WebSocket: self.WebSocket
   };
   var logger = {
-    logger: window.console,
+    logger: self.console,
     enabled: false
   };
   function log() {
