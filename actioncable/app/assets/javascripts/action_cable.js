@@ -2,6 +2,9 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : global.ActionCable = factory();
 })(this, function() {
   "use strict";
+  var adapters = {
+    WebSocket: window.WebSocket
+  };
   var logger = {
     logger: window.console,
     enabled: false
@@ -218,7 +221,7 @@
           if (this.webSocket) {
             this.uninstallEventHandlers();
           }
-          this.webSocket = new ActionCable.WebSocket(this.consumer.url, protocols);
+          this.webSocket = new adapters.WebSocket(this.consumer.url, protocols);
           this.installEventHandlers();
           this.monitor.start();
           return true;
@@ -571,9 +574,7 @@
   function stopDebugging() {
     logger.enabled = false;
   }
-  var ActionCable = {
-    WebSocket: window.WebSocket
-  };
+  var ActionCable = {};
   ActionCable.createConsumer = createConsumer;
   ActionCable.createWebSocketURL = createWebSocketURL;
   ActionCable.Connection = Connection;
@@ -593,6 +594,14 @@
       },
       set: function set(value) {
         logger.logger = value;
+      }
+    },
+    WebSocket: {
+      get: function get() {
+        return adapters.WebSocket;
+      },
+      set: function set(value) {
+        adapters.WebSocket = value;
       }
     }
   });

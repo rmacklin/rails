@@ -1,4 +1,5 @@
 import { ActionCable, createConsumer, createWebSocketURL, getConfig, startDebugging, stopDebugging } from "./action_cable"
+import adapters from "./adapters"
 import Connection from "./connection"
 import ConnectionMonitor from "./connection_monitor"
 import Consumer from "./consumer"
@@ -24,6 +25,10 @@ Object.defineProperties(ActionCable, {
   logger: {
     get() { return logger.logger },
     set(value) { logger.logger = value }
+  },
+  WebSocket: {
+    get() { return adapters.WebSocket },
+    set(value) { adapters.WebSocket = value }
   }
 })
 

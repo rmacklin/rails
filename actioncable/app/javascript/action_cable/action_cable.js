@@ -36,8 +36,6 @@ export function stopDebugging() {
   logger.enabled = false
 }
 
-const ActionCable = {
-  WebSocket: window.WebSocket,
-}
+const ActionCable = {}
 
 export { ActionCable }
