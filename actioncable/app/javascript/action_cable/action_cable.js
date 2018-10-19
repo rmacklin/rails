@@ -1,5 +1,6 @@
 import Consumer from "./consumer"
 import INTERNAL from "./internal"
+import { logger } from "./logger"
 
 export function getConfig(name) {
   const element = document.head.querySelector(`meta[name='action-cable-${name}']`)
@@ -27,24 +28,16 @@ export function createConsumer(url) {
   return new Consumer(createWebSocketURL(url))
 }
 
+export function startDebugging() {
+  logger.enabled = true
+}
+
+export function stopDebugging() {
+  logger.enabled = false
+}
+
 const ActionCable = {
   WebSocket: window.WebSocket,
-  logger: window.console,
-
-  startDebugging() {
-    this.debugging = true
-  },
-
-  stopDebugging() {
-    this.debugging = null
-  },
-
-  log(...messages) {
-    if (this.debugging) {
-      messages.push(Date.now())
-      this.logger.log("[ActionCable]", ...messages)
-    }
-  }
 }
 
 export { ActionCable }
