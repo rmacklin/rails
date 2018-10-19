@@ -552,16 +552,16 @@
       return url;
     }
   }
+  function createConsumer(url) {
+    if (url == null) {
+      var urlConfig = getConfig("url");
+      url = urlConfig ? urlConfig : INTERNAL.default_mount_path;
+    }
+    return new Consumer(createWebSocketURL(url));
+  }
   var ActionCable = {
     WebSocket: window.WebSocket,
     logger: window.console,
-    createConsumer: function createConsumer(url) {
-      if (url == null) {
-        var urlConfig = getConfig("url");
-        url = urlConfig ? urlConfig : INTERNAL.default_mount_path;
-      }
-      return new Consumer(createWebSocketURL(url));
-    },
     startDebugging: function startDebugging() {
       this.debugging = true;
     },
@@ -579,6 +579,7 @@
       }
     }
   };
+  ActionCable.createConsumer = createConsumer;
   ActionCable.createWebSocketURL = createWebSocketURL;
   ActionCable.Connection = Connection;
   ActionCable.ConnectionMonitor = ConnectionMonitor;
