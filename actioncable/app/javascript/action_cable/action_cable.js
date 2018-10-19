@@ -1,6 +1,10 @@
+import Connection from "./connection"
+import ConnectionMonitor from "./connection_monitor"
 import Consumer from "./consumer"
 import INTERNAL from "./internal"
-import { logger } from "./logger"
+import { log, logger } from "./logger"
+import Subscription from "./subscription"
+import Subscriptions from "./subscriptions"
 
 export function getConfig(name) {
   const element = document.head.querySelector(`meta[name='action-cable-${name}']`)
@@ -36,6 +40,4 @@ export function stopDebugging() {
   logger.enabled = false
 }
 
-const ActionCable = {}
-
-export { ActionCable }
+export { Connection, ConnectionMonitor, Consumer, INTERNAL, log, Subscription, Subscriptions }

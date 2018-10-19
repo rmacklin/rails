@@ -574,20 +574,21 @@
   function stopDebugging() {
     logger.enabled = false;
   }
-  var ActionCable = {};
-  ActionCable.createConsumer = createConsumer;
-  ActionCable.createWebSocketURL = createWebSocketURL;
-  ActionCable.Connection = Connection;
-  ActionCable.ConnectionMonitor = ConnectionMonitor;
-  ActionCable.Consumer = Consumer;
-  ActionCable.getConfig = getConfig;
-  ActionCable.INTERNAL = INTERNAL;
-  ActionCable.log = log;
-  ActionCable.startDebugging = startDebugging;
-  ActionCable.stopDebugging = stopDebugging;
-  ActionCable.Subscription = Subscription;
-  ActionCable.Subscriptions = Subscriptions;
-  Object.defineProperties(ActionCable, {
+  var ActionCable = Object.freeze({
+    getConfig: getConfig,
+    createWebSocketURL: createWebSocketURL,
+    createConsumer: createConsumer,
+    startDebugging: startDebugging,
+    stopDebugging: stopDebugging,
+    Connection: Connection,
+    ConnectionMonitor: ConnectionMonitor,
+    Consumer: Consumer,
+    INTERNAL: INTERNAL,
+    log: log,
+    Subscription: Subscription,
+    Subscriptions: Subscriptions
+  });
+  var index = Object.defineProperties(Object.create(ActionCable), {
     logger: {
       get: function get() {
         return logger.logger;
@@ -605,5 +606,5 @@
       }
     }
   });
-  return ActionCable;
+  return index;
 });
