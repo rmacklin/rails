@@ -288,8 +288,8 @@
     }, {
       key: "getState",
       value: function getState() {
-        for (var state in WebSocket) {
-          var value = WebSocket[state];
+        for (var state in adapters.WebSocket) {
+          var value = adapters.WebSocket[state];
           if (value === (this.webSocket ? this.webSocket.readyState : undefined)) {
             return state.toLowerCase();
           }

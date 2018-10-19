@@ -87,8 +87,8 @@ class Connection {
   }
 
   getState() {
-    for (let state in WebSocket) {
-      const value = WebSocket[state]
+    for (let state in adapters.WebSocket) {
+      const value = adapters.WebSocket[state]
 
       if (value === (this.webSocket ? this.webSocket.readyState : undefined)) {
         return state.toLowerCase()
