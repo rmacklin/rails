@@ -24,7 +24,7 @@ export function createWebSocketURL(url) {
   }
 }
 
-export function createConsumer(url) {
+export function createConsumer(url, { getConfig = getConfig, createWebSocketURL = createWebSocketURL }) {
   if (url == null) {
     const urlConfig = getConfig("url")
     url = (urlConfig ? urlConfig : INTERNAL.default_mount_path)

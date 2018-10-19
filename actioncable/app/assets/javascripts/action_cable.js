@@ -561,7 +561,8 @@
       return url;
     }
   }
-  function createConsumer(url) {
+  function createConsumer(url, _ref) {
+    var _ref$getConfig = _ref.getConfig, getConfig = _ref$getConfig === undefined ? getConfig : _ref$getConfig, _ref$createWebSocketU = _ref.createWebSocketURL, createWebSocketURL = _ref$createWebSocketU === undefined ? createWebSocketURL : _ref$createWebSocketU;
     if (url == null) {
       var urlConfig = getConfig("url");
       url = urlConfig ? urlConfig : INTERNAL.default_mount_path;
