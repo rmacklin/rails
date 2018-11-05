@@ -2,10 +2,16 @@
   typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define([ "exports" ], factory) : factory(global.ActionCable = {});
 })(this, function(exports) {
   "use strict";
-  var adapters = {
-    logger: self.console,
-    WebSocket: self.WebSocket
-  };
+  var adapters = void 0;
+  if (typeof self !== "undefined") {
+    adapters = {
+      logger: self.console,
+      WebSocket: self.WebSocket
+    };
+  } else {
+    adapters = {};
+  }
+  var adapters$1 = adapters;
   var logger = {
     log: function log() {
       if (this.enabled) {
@@ -14,7 +20,7 @@
           messages[_key] = arguments[_key];
         }
         messages.push(Date.now());
-        (_adapters$logger = adapters.logger).log.apply(_adapters$logger, [ "[ActionCable]" ].concat(messages));
+        (_adapters$logger = adapters$1.logger).log.apply(_adapters$logger, [ "[ActionCable]" ].concat(messages));
       }
     }
   };
@@ -182,7 +188,7 @@
         if (this.webSocket) {
           this.uninstallEventHandlers();
         }
-        this.webSocket = new adapters.WebSocket(this.consumer.url, protocols);
+        this.webSocket = new adapters$1.WebSocket(this.consumer.url, protocols);
         this.installEventHandlers();
         this.monitor.start();
         return true;
@@ -236,8 +242,8 @@
     };
     Connection.prototype.getState = function getState() {
       if (this.webSocket) {
-        for (var state in adapters.WebSocket) {
-          if (adapters.WebSocket[state] === this.webSocket.readyState) {
+        for (var state in adapters$1.WebSocket) {
+          if (adapters$1.WebSocket[state] === this.webSocket.readyState) {
             return state.toLowerCase();
           }
         }
@@ -485,7 +491,7 @@
   exports.INTERNAL = INTERNAL;
   exports.Subscription = Subscription;
   exports.Subscriptions = Subscriptions;
-  exports.adapters = adapters;
+  exports.adapters = adapters$1;
   exports.logger = logger;
   exports.createConsumer = createConsumer;
   exports.getConfig = getConfig;
