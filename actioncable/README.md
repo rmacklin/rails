@@ -86,16 +86,13 @@ end
 The client-side needs to setup a consumer instance of this connection. That's done like so:
 
 ```js
-// app/assets/javascripts/cable.js
-//= require action_cable
-//= require_self
-//= require_tree ./channels
+// app/javascript/channels/consumer.js
+// Action Cable provides the framework to deal with WebSockets in Rails.
+// You can generate new channels where WebSocket features live using the `rails generate channel` command.
 
-(function() {
-  this.App || (this.App = {});
+import ActionCable from "@rails/actioncable"
 
-  App.cable = ActionCable.createConsumer("ws://cable.example.com");
-}).call(this);
+export default ActionCable.createConsumer("ws://cable.example.com")
 ```
 
 The `ws://cable.example.com` address must point to your Action Cable server(s), and it
@@ -139,50 +136,73 @@ The `#subscribed` callback is invoked when, as we'll show below, a client-side s
 we take that opportunity to say "the current user has indeed appeared". That appear/disappear API could be backed by
 Redis or a database or whatever else. Here's what the client-side of that looks like:
 
-```coffeescript
-# app/assets/javascripts/cable/subscriptions/appearance.coffee
-App.cable.subscriptions.create "AppearanceChannel",
-  # Called when the subscription is ready for use on the server
-  connected: ->
-    @install()
-    @appear()
+```js
+// app/javascript/cable/subscriptions/appearance_channel.js
+import consumer from "./consumer"
 
-  # Called when the WebSocket connection is closed
-  disconnected: ->
-    @uninstall()
+consumer.subscriptions.create("AppearanceChannel", {
+  // Called once when the subscription is created.
+  initialized() {
+    this.update = this.update.bind(this)
+  },
+  
+  // Called when the subscription is ready for use on the server.
+  connected() {
+    this.install()
+    this.update()
+  },
 
-  # Called when the subscription is rejected by the server
-  rejected: ->
-    @uninstall()
+  // Called when the WebSocket connection is closed.
+  disconnected() {
+    this.uninstall()
+  },
 
-  appear: ->
-    # Calls `AppearanceChannel#appear(data)` on the server
-    @perform("appear", appearing_on: $("main").data("appearing-on"))
+  // Called when the subscription is rejected by the server.
+  rejected() {
+    this.uninstall()
+  },
 
-  away: ->
-    # Calls `AppearanceChannel#away` on the server
-    @perform("away")
+  update() {
+    this.documentIsActive ? this.appear() : this.away()
+  },
 
+  appear() {
+    // Calls `AppearanceChannel#appear(data)` on the server.
+    this.perform("appear", { appearing_on: this.appearingOn })
+  },
 
-  buttonSelector = "[data-behavior~=appear_away]"
+  away() {
+    // Calls `AppearanceChannel#away` on the server.
+    this.perform("away")
+  },
 
-  install: ->
-    $(document).on "turbolinks:load.appearance", =>
-      @appear()
+  install() {
+    window.addEventListener("focus", this.update)
+    window.addEventListener("blur", this.update)
+    document.addEventListener("turbolinks:load", this.update)
+    document.addEventListener("visibilitychange", this.update)
+  },
 
-    $(document).on "click.appearance", buttonSelector, =>
-      @away()
-      false
+  uninstall() {
+    window.removeEventListener("focus", this.update)
+    window.removeEventListener("blur", this.update)
+    document.removeEventListener("turbolinks:load", this.update)
+    document.removeEventListener("visibilitychange", this.update)
+  },
 
-    $(buttonSelector).show()
-
-  uninstall: ->
-    $(document).off(".appearance")
-    $(buttonSelector).hide()
+  get documentIsActive() {
+    return document.visibilityState == "visible" && document.hasFocus()
+  },
+  
+  get appearingOn() {
+    const element = document.querySelector("[data-appearing-on]")
+    return element ? element.getAttribute("data-appearing-on") : null
+  }
+})
 ```
 
-Simply calling `App.cable.subscriptions.create` will setup the subscription, which will call `AppearanceChannel#subscribed`,
-which in turn is linked to the original `App.cable` -> `ApplicationCable::Connection` instances.
+Simply calling `consumer.subscriptions.create` will setup the subscription, which will call `AppearanceChannel#subscribed`,
+which in turn is linked to the original `consumer` -> `ApplicationCable::Connection` instances.
 
 Next, we link the client-side `appear` method to `AppearanceChannel#appear(data)`. This is possible because the server-side
 channel instance will automatically expose the public methods declared on the class (minus the callbacks), so that these
@@ -206,11 +226,14 @@ class WebNotificationsChannel < ApplicationCable::Channel
 end
 ```
 
-```coffeescript
-# Client-side, which assumes you've already requested the right to send web notifications
-App.cable.subscriptions.create "WebNotificationsChannel",
-  received: (data) ->
-    new Notification data["title"], body: data["body"]
+```js
+// app/javascript/cable/subscriptions/web_notifications_channel.js
+// Client-side, which assumes you've already requested the right to send web notifications
+consumer.subscriptions.create("WebNotificationsChannel", {
+  received(data) {
+    new Notification(data["title"], body: data["body"])
+  }
+})
 ```
 
 ```ruby
@@ -240,23 +263,31 @@ end
 
 If you pass an object as the first argument to `subscriptions.create`, that object will become the params hash in your cable channel. The keyword `channel` is required.
 
-```coffeescript
-# Client-side, which assumes you've already requested the right to send web notifications
-App.cable.subscriptions.create { channel: "ChatChannel", room: "Best Room" },
-  received: (data) ->
-    @appendLine(data)
+```js
+// app/javascript/cable/subscriptions/chat_channel.js
+// Client-side, which assumes you've already requested the right to send web notifications
+import consumer from "./consumer"
 
-  appendLine: (data) ->
-    html = @createLine(data)
-    $("[data-chat-room='Best Room']").append(html)
+consumer.subscriptions.create({ channel: "ChatChannel", room: "Best Room" }, {
+  received(data) {
+    this.appendLine(data)
+  },
 
-  createLine: (data) ->
-    """
-    <article class="chat-line">
-      <span class="speaker">#{data["sent_by"]}</span>
-      <span class="body">#{data["body"]}</span>
-    </article>
-    """
+  appendLine(data) {
+    const html = this.createLine(data)
+    const element = document.querySelector("[data-chat-room='Best Room']")
+    element.insertAdjacentHTML("beforeend", html)
+  },
+
+  createLine(data) {
+    return `
+      <article class="chat-line">
+        <span class="speaker">${data["sent_by"]}</span>
+        <span class="body">${data["body"]}</span>
+      </article>
+    `
+  }
+})
 ```
 
 ```ruby
@@ -283,13 +314,17 @@ class ChatChannel < ApplicationCable::Channel
 end
 ```
 
-```coffeescript
-# Client-side, which assumes you've already requested the right to send web notifications
-App.chatChannel = App.cable.subscriptions.create { channel: "ChatChannel", room: "Best Room" },
-  received: (data) ->
-    # data => { sent_by: "Paul", body: "This is a cool chat app." }
+```js
+// Client-side, which assumes you've already requested the right to send web notifications
+import consumer from "./consumer"
 
-App.chatChannel.send({ sent_by: "Paul", body: "This is a cool chat app." })
+const chatChannel = consumer.subscriptions.create({ channel: "ChatChannel", room: "Best Room" }, {
+  received(data) {
+    // data => { sent_by: "Paul", body: "This is a cool chat app." }
+  }
+})
+
+chatChannel.send({ sent_by: "Paul", body: "This is a cool chat app." })
 ```
 
 The rebroadcast will be received by all connected clients, _including_ the client that sent the message. Note that params are the same as they were when you subscribed to the channel.
@@ -356,8 +391,8 @@ Once you have decided how to run your cable server (see below), you must provide
 There are two ways you can do this.
 
 The first is to simply pass it in when creating your consumer. For a standalone server,
-this would be something like: `App.cable = ActionCable.createConsumer("ws://example.com:28080")`, and for an in-app server,
-something like: `App.cable = ActionCable.createConsumer("/cable")`.
+this would be something like: `export default ActionCable.createConsumer("ws://example.com:28080")`, and for an in-app server,
+something like: `export default ActionCable.createConsumer("/cable")`.
 
 The second option is to pass the server URL through the `action_cable_meta_tag` in your layout.
 This uses a URL or path typically set via `config.action_cable.url` in the environment configuration files, or defaults to "/cable".
@@ -380,8 +415,8 @@ Then add the following line to your layout before your JavaScript tag:
 
 And finally, create your consumer like so:
 
-```coffeescript
-App.cable = ActionCable.createConsumer()
+```js
+export default ActionCable.createConsumer()
 ```
 
 ### Other Configurations
@@ -471,69 +506,60 @@ Rack socket hijacking API.
 ## Frontend assets
 
 Action Cable's frontend assets are distributed through two channels: the
-official gem and npm package, both titled `actioncable`.
+`@rails/actioncable` npm package and the `actioncable` gem.
 
-### Gem usage
+### Using the npm package with Webpacker
 
-Through the `actioncable` gem, Action Cable's frontend assets are
-available through the Rails Asset Pipeline. Create a `cable.js` or
-`cable.coffee` file (this is automatically done for you with Rails
-generators), and then simply require the assets:
+Action Cable's frontend JS assets are bundled in an officially supported npm module,
+intended for usage with Webpacker or in standalone frontend applications that
+communicate with a Rails application. A common use case for this could be if you
+have a decoupled frontend application written in React, Ember.js, etc. and want to
+add real-time WebSocket functionality.
 
-In JavaScript...
-
-```javascript
-//= require action_cable
-```
-
-... and in CoffeeScript:
-
-```coffeescript
-#= require action_cable
-```
-
-### npm usage
-
-In addition to being available through the `actioncable` gem, Action Cable's
-frontend JS assets are also bundled in an officially supported npm module,
-intended for usage in standalone frontend applications that communicate with a
-Rails application. A common use case for this could be if you have a decoupled
-frontend application written in React, Ember.js, etc. and want to add real-time
-WebSocket functionality.
-
-### Installation
+#### Installation
 
 ```
 npm install @rails/actioncable --save
 ```
 
-### Usage
+#### Usage
 
-The `ActionCable` constant is available as a `require`-able module, so
-you only have to require the package to gain access to the API that is
+The `ActionCable` constant is available as an `import`-able module, so
+you only have to import the package to gain access to the API that is
 provided.
 
 In JavaScript...
 
 ```javascript
-ActionCable = require('@rails/actioncable')
+import ActionCable from "@rails/actioncable"
 
-var cable = ActionCable.createConsumer('wss://RAILS-API-PATH.com/cable')
+const cable = ActionCable.createConsumer("wss://RAILS-API-PATH.com/cable")
 
-cable.subscriptions.create('AppearanceChannel', {
+cable.subscriptions.create("AppearanceChannel", {
   // normal channel code goes here...
-});
+})
 ```
 
-and in CoffeeScript...
+### Using assets from the gem with Sprockets
 
-```coffeescript
-ActionCable = require('@rails/actioncable')
+Through the `actioncable` gem, Action Cable's frontend assets are
+available through the Rails Asset Pipeline. Create a `cable.js` file
+(this is automatically done for you with Rails generators), and then
+simply require the assets:
 
-cable = ActionCable.createConsumer('wss://RAILS-API-PATH.com/cable')
+In JavaScript...
 
-cable.subscriptions.create 'AppearanceChannel',
-    # normal channel code goes here...
+```javascript
+// app/assets/javascripts/cable.js
+//= require action_cable
+//= require_self
+//= require_tree ./channels
+
+(function() {
+  this.App || (this.App = {});
+
+  App.cable = ActionCable.createConsumer("ws://cable.example.com");
+}).call(this);
 ```
 
 ## Download and Installation
