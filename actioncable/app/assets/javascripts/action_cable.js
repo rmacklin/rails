@@ -49,7 +49,9 @@
         this.startedAt = now();
         delete this.stoppedAt;
         this.startPolling();
-        document.addEventListener("visibilitychange", this.visibilityDidChange);
+        if (typeof document !== "undefined") {
+          document.addEventListener("visibilitychange", this.visibilityDidChange);
+        }
         logger.log("ConnectionMonitor started. pollInterval = " + this.getPollInterval() + " ms");
       }
     };
@@ -57,7 +59,9 @@
       if (this.isRunning()) {
         this.stoppedAt = now();
         this.stopPolling();
-        document.removeEventListener("visibilitychange", this.visibilityDidChange);
+        if (typeof document !== "undefined") {
+          document.removeEventListener("visibilitychange", this.visibilityDidChange);
+        }
         logger.log("ConnectionMonitor stopped");
       }
     };
