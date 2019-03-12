@@ -455,6 +455,9 @@
     return Consumer;
   }();
   function createWebSocketURL(url) {
+    if (typeof url === "function") {
+      url = url();
+    }
     if (url && !/^wss?:/i.test(url)) {
       var a = document.createElement("a");
       a.href = url;

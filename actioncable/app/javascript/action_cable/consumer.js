@@ -54,6 +54,10 @@ export default class Consumer {
 }
 
 export function createWebSocketURL(url) {
+  if (typeof url === "function") {
+    url = url()
+  }
+
   if (url && !/^wss?:/i.test(url)) {
     const a = document.createElement("a")
     a.href = url
