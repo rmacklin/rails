@@ -20,7 +20,7 @@ export {
 }
 
 export function createConsumer(url = getConfig("url") || INTERNAL.default_mount_path) {
-  return new Consumer(createWebSocketURL(url))
+  return new Consumer(url)
 }
 
 export function getConfig(name) {

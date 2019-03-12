@@ -432,7 +432,7 @@
   var Consumer = function() {
     function Consumer(url) {
       classCallCheck(this, Consumer);
-      this.url = url;
+      this.url = createWebSocketURL(url);
       this.subscriptions = new Subscriptions(this);
       this.connection = new Connection(this);
     }
@@ -467,7 +467,7 @@
   }
   function createConsumer() {
     var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getConfig("url") || INTERNAL.default_mount_path;
-    return new Consumer(createWebSocketURL(url));
+    return new Consumer(url);
   }
   function getConfig(name) {
     var element = document.head.querySelector("meta[name='action-cable-" + name + "']");
