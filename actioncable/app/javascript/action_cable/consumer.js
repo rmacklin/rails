@@ -29,9 +29,13 @@ import Subscriptions from "./subscriptions"
 
 export default class Consumer {
   constructor(url) {
-    this.url = createWebSocketURL(url)
+    this._url = url
     this.subscriptions = new Subscriptions(this)
     this.connection = new Connection(this)
+  }
+
+  get url() {
+    return createWebSocketURL(this._url)
   }
 
   send(data) {

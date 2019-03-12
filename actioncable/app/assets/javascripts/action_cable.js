@@ -28,6 +28,22 @@
       throw new TypeError("Cannot call a class as a function");
     }
   };
+  var createClass = function() {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+    return function(Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
   var now = function now() {
     return new Date().getTime();
   };
@@ -432,7 +448,7 @@
   var Consumer = function() {
     function Consumer(url) {
       classCallCheck(this, Consumer);
-      this.url = createWebSocketURL(url);
+      this._url = url;
       this.subscriptions = new Subscriptions(this);
       this.connection = new Connection(this);
     }
@@ -452,6 +468,12 @@
         return this.connection.open();
       }
     };
+    createClass(Consumer, [ {
+      key: "url",
+      get: function get$$1() {
+        return createWebSocketURL(this._url);
+      }
+    } ]);
     return Consumer;
   }();
   function createWebSocketURL(url) {
