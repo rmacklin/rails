@@ -454,16 +454,6 @@
     };
     return Consumer;
   }();
-  function createConsumer() {
-    var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getConfig("url") || INTERNAL.default_mount_path;
-    return new Consumer(createWebSocketURL(url));
-  }
-  function getConfig(name) {
-    var element = document.head.querySelector("meta[name='action-cable-" + name + "']");
-    if (element) {
-      return element.getAttribute("content");
-    }
-  }
   function createWebSocketURL(url) {
     if (url && !/^wss?:/i.test(url)) {
       var a = document.createElement("a");
@@ -475,6 +465,16 @@
       return url;
     }
   }
+  function createConsumer() {
+    var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getConfig("url") || INTERNAL.default_mount_path;
+    return new Consumer(createWebSocketURL(url));
+  }
+  function getConfig(name) {
+    var element = document.head.querySelector("meta[name='action-cable-" + name + "']");
+    if (element) {
+      return element.getAttribute("content");
+    }
+  }
   exports.Connection = Connection;
   exports.ConnectionMonitor = ConnectionMonitor;
   exports.Consumer = Consumer;
@@ -482,10 +482,10 @@
   exports.Subscription = Subscription;
   exports.Subscriptions = Subscriptions;
   exports.adapters = adapters;
+  exports.createWebSocketURL = createWebSocketURL;
   exports.logger = logger;
   exports.createConsumer = createConsumer;
   exports.getConfig = getConfig;
-  exports.createWebSocketURL = createWebSocketURL;
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
